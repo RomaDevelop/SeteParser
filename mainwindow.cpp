@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QXmlStreamReader>
 #define qdbg qDebug()
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,7 +12,44 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+	//ui->listWidget->addItem("https://www.mail.ru");
+	//ui->listWidget->addItem("https://www.avito.ru/moskva/kvartiry/sdam/na_dlitelnyy_srok/1-komnatnye-ASgBAgICA0SSA8gQ8AeQUswIjlk?f=ASgBAgECA0SSA8gQ8AeQUswIjlkCRegHFXsiZnJvbSI6MzMsInRvIjpudWxsfcaaDBV7ImZyb20iOjAsInRvIjo1MDAwMH0&footWalkingMetro=5&s=104");
+
     manager = new QNetworkAccessManager(this);
+
+	connect(ui->pbParse,&QPushButton::clicked,[this](){
+		QFile file("F:/C++/SiteParser/html example.html");
+		file.open(QFile::ReadOnly);
+		QString html = file.readAll();
+
+		auto blocks = HTML::Parse(html);
+		for(auto &block:blocks)
+		{
+			ui->plainTextEdit->appendPlainText(block.ToStr());
+		}
+	});
+
+//	QString adressGroup;
+//	auto valsList = HTML::GetValues(html,"style-item-address-KooqC");
+//	if(valsList.size() != 1) qdbg << "error 1";
+//	else adressGroup = valsList[0];
+
+//	QString adress;
+//	valsList = HTML::GetValues(adressGroup,"style-item-address__string-wt61A");
+//	if(valsList.size() != 1) qdbg << "error 2";
+//	else adress = valsList[0];
+//	qdbg << adress;
+//	qdbg << "--------------------------------";
+
+//	QStringList metroVals;
+//	metroVals = HTML::GetValues(adressGroup,"style-item-address-georeferences-item-TZsrp");
+//	if(metroVals.size() == 0) qdbg << "error 3";
+
+//	for(auto &metroVal:metroVals)
+//	{
+//		qdbg << metroVal;
+//		qdbg << "--------------------------------";
+//	}
 }
 
 MainWindow::~MainWindow()
@@ -72,5 +110,10 @@ Page::Page(QString url_, QString html_, QVBoxLayout *layout, QPlainTextEdit *tex
         QString ad = html_.left(html_.indexOf("\" rel=\"noopener\""));
         ad.remove(0,ad.indexOf("href=\""));
         ads += ad;
-    }
+	}
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+
 }

@@ -20,19 +20,9 @@
       <x>10</x>
       <y>10</y>
       <width>191</width>
-      <height>551</height>
+      <height>511</height>
      </rect>
     </property>
-    <item>
-     <property name="text">
-      <string>https://www.avito.ru/moskva/kvartiry/sdam/na_dlitelnyy_srok/1-komnatnye-ASgBAgICA0SSA8gQ8AeQUswIjlk?f=ASgBAgECA0SSA8gQ8AeQUswIjlkCRegHFXsiZnJvbSI6MzMsInRvIjpudWxsfcaaDBV7ImZyb20iOjAsInRvIjo1MDAwMH0&amp;footWalkingMetro=5&amp;s=104</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>https://www.avito.ru/moskva/kvartiry/sdam/na_dlitelnyy_srok/1-komnatnye-ASgBAgICA0SSA8gQ8AeQUswIjlk?f=ASgBAgECA0SSA8gQ8AeQUswIjlkCRegHFXsiZnJvbSI6MzMsInRvIjpudWxsfcaaDBV7ImZyb20iOjAsInRvIjo1MDAwMH0&amp;footWalkingMetro=5&amp;p=2&amp;s=104</string>
-     </property>
-    </item>
    </widget>
    <widget class="QPlainTextEdit" name="plainTextEdit">
     <property name="geometry">
@@ -42,6 +32,11 @@
       <width>1041</width>
       <height>551</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="lineWrapMode">
      <enum>QPlainTextEdit::NoWrap</enum>
@@ -58,6 +53,32 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>540</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbParse">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>540</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>pbParse</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -65,7 +86,7 @@
      <x>0</x>
      <y>0</y>
      <width>1500</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

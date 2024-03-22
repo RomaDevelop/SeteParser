@@ -19,7 +19,17 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
+INCLUDEPATH += ../include
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+#begin connecting libeay32
+LIBS += -L$$PWD/../bin/ -llibeay32
+#end connecting libeay32
+
+#begin connecting libeay32
+LIBS += -L$$PWD/../bin/ -lssleay32
+#end connecting libeay32
