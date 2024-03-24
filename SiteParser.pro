@@ -10,10 +10,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ads.cpp \
+    html.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    ads.h \
+    html.h \
     mainwindow.h
 
 FORMS += \
@@ -25,11 +29,3 @@ INCLUDEPATH += ../include
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-#begin connecting libeay32
-LIBS += -L$$PWD/../bin/ -llibeay32
-#end connecting libeay32
-
-#begin connecting libeay32
-LIBS += -L$$PWD/../bin/ -lssleay32
-#end connecting libeay32

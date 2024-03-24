@@ -4,6 +4,9 @@
 #include <QFile>
 #include <QDebug>
 #include <QXmlStreamReader>
+
+#include "html.h"
+
 #define qdbg qDebug()
 
 MainWindow::MainWindow(QWidget *parent)
@@ -18,15 +21,16 @@ MainWindow::MainWindow(QWidget *parent)
     manager = new QNetworkAccessManager(this);
 
 	connect(ui->pbParse,&QPushButton::clicked,[this](){
-		QFile file("F:/C++/SiteParser/html example.html");
+		QFile file("D:/Documents/C++ QT/SiteParser/html example.html");
 		file.open(QFile::ReadOnly);
-		QString html = file.readAll();
+		HTML html;
+		html.html = file.readAll();
+		html.ParseTegs();
 
-		auto blocks = HTML::Parse(html);
-		for(auto &block:blocks)
-		{
-			ui->plainTextEdit->appendPlainText(block.ToStr());
-		}
+		ui->plainTextEdit->clear();
+		ui->plainTextEdit->appendPlainText(html.TegsTextToStr());
+		ui->plainTextEdit->appendPlainText(html.TegsDecodedToStr());
+
 	});
 
 //	QString adressGroup;
