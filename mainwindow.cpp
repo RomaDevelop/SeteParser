@@ -21,39 +21,50 @@ MainWindow::MainWindow(QWidget *parent)
     manager = new QNetworkAccessManager(this);
 
 	connect(ui->pbParse,&QPushButton::clicked,[this](){
-		QFile file("D:/Documents/C++ QT/SiteParser/html example.html");
+		QFile file("F:\\C++\\SiteParser\\html example avito.html");
 		file.open(QFile::ReadOnly);
 		HTML html;
 		html.html = file.readAll();
-		html.ParseTegs();
+		html.ParseTags();
 
 		ui->plainTextEdit->clear();
-		ui->plainTextEdit->appendPlainText(html.TegsTextToStr());
-		ui->plainTextEdit->appendPlainText(html.TegsDecodedToStr());
+		ui->plainTextEdit->appendPlainText(html.TagsInfo());
 
+		ui->plainTextEdit->appendPlainText("--------------------------");
+
+		QString what = "adress";
+		QString tag = "span";
+		Attribute attrib("class","style-item-address__string-wt61A");
+		auto tags = html.FindTags(tag,{attrib});
+		if(tags.size())
+		{
+			ui->plainTextEdit->appendPlainText(tags[0]->GetNestedText());
+			if(tags.size() != 1) ui->plainTextEdit->appendPlainText("find more 1 tag");
+		}
+		else ui->plainTextEdit->appendPlainText("not find " + what + " " + tag + " " + attrib.ToStr());
+
+		ui->plainTextEdit->appendPlainText("--------------------------");
+
+		what = "metros";
+		tag = "span";
+		attrib = Attribute("class","style-item-address-georeferences-item-TZsrp");
+		tags = html.FindTags(tag,{attrib});
+		if(tags.size())
+		{
+			for(auto &tag:tags)
+			{
+				ui->plainTextEdit->appendPlainText(tag->GetTagInfo());
+				ui->plainTextEdit->appendPlainText("______");
+				for(auto &nestTag:tag->nestedOpenersTags)
+				{
+					ui->plainTextEdit->appendPlainText(nestTag->GetTagInfo());
+					ui->plainTextEdit->appendPlainText("------");
+				}
+				ui->plainTextEdit->appendPlainText("-------------");
+			}
+		}
+		else ui->plainTextEdit->appendPlainText("not find " + what + " " + tag + " " + attrib.ToStr());
 	});
-
-//	QString adressGroup;
-//	auto valsList = HTML::GetValues(html,"style-item-address-KooqC");
-//	if(valsList.size() != 1) qdbg << "error 1";
-//	else adressGroup = valsList[0];
-
-//	QString adress;
-//	valsList = HTML::GetValues(adressGroup,"style-item-address__string-wt61A");
-//	if(valsList.size() != 1) qdbg << "error 2";
-//	else adress = valsList[0];
-//	qdbg << adress;
-//	qdbg << "--------------------------------";
-
-//	QStringList metroVals;
-//	metroVals = HTML::GetValues(adressGroup,"style-item-address-georeferences-item-TZsrp");
-//	if(metroVals.size() == 0) qdbg << "error 3";
-
-//	for(auto &metroVal:metroVals)
-//	{
-//		qdbg << metroVal;
-//		qdbg << "--------------------------------";
-//	}
 }
 
 MainWindow::~MainWindow()

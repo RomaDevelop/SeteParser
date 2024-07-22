@@ -1,11 +1,12 @@
 #ifndef HTML_H
 #define HTML_H
 
+#include <memory>
+
 #include <QString>
 #include <QDebug>
 
-#define QSn QString::number
-#define qdbg qDebug()
+#include "tagnames.h"
 
 class LogsSt
 {
@@ -25,90 +26,74 @@ struct Attribute
 	QString ToStr() { return "["+name+"="+value+"]"; }
 };
 
-struct Block
-{
-	QString blockDefining;
-	QString blockText;
-	QString blockFinal;
-
-	std::vector<Attribute> attributes;
-	std::vector<Block> nestedBlocks;
-
-	QString ToStr() { return "blockDefining [" + blockDefining + "]\nblockText [" + blockText + "]\nblockFinal [" + blockFinal + "]\n"; }
-};
-
-struct Teg
+struct Tag
 {
 	const QString &html;
 	int startIndex;
 	int endIndex;
+	Tag *closerTag = nullptr;
+	Tag *openerTag = nullptr;
+	std::vector<Tag*> nestedOpenersTags;
+	Tag *nextTag = nullptr;
+	Tag *prevTag = nullptr;
+	Tag *nextOpener = nullptr;
+	Tag *prevOpener = nullptr;
 
 	int type = undefined;
 	QString name;
 	std::vector<Attribute> attributes;
 
-	Teg(const QString &html_, int startIndex_, int endIndex_): html{html_}, startIndex{startIndex_}, endIndex {endIndex_} {}
+	Tag(const QString &html_, int startIndex_, int endIndex_): html{html_}, startIndex{startIndex_}, endIndex {endIndex_} { ParseTagDefinition(); }
+	void ParseTagDefinition();
+//	Tag* FindCloser()
+//	{
+//		Tag* retPtr = nullptr;
+//		if(type != opener)
+//		{
+//			if(nestedOpenersTags.back() && nestedOpenersTags.back()->closerTag && nestedOpenersTags.back()->closerTag->nextTag)
+//			{
+//				Tag* tmpTagPt = nestedOpenersTags.back()->closerTag->nextTag;
+//				while(tmpTagPt->type == single)
+//				{
+//					if(tmpTagPt->nextTag)
+//						tmpTagPt = tmpTagPt->nextTag;
+//					else
+//					{
+//						LogsSt::Error("Tag::FindCloser error structrure 1");
+//						break;
+//					}
+//				}
+//				if(tmpTagPt->type == closer && tmpTagPt->name == name)
+//				{
+//					retPtr = tmpTagPt;
+//				}
+//				else LogsSt::Error("Tag::FindCloser error structrure 2");
+//			}
+//			else LogsSt::Error("Tag::FindCloser error structrure 3");
+//		}
+//		else LogsSt::Error("Tag::FindCloser tag is not opener " + GetTagInfo());
+//		return retPtr;
+//	}
 
-	void DecodeTeg();
+	QString GetDefinitionText() const { return html.mid(startIndex+1,endIndex-startIndex-1);}
+	QString GetNestedText();
+	QString GetTagInfo();
 
-	QString GetText() const { return html.mid(startIndex+1,endIndex-startIndex-1);}
-	QString IndexesAndSrcTextToStr() const
-	{
-		return "["+QSn(startIndex)+"-"+QSn(endIndex)+"]:["+GetText()+"]";
-	}
-	QString DecodedToStr()
-	{
-		QString ret;
-		ret = "["+TypeToStr()+"]["+name+"]";
-		if(attributes.size()) ret += "\n    Attributes:";
-		for(uint i=0; i<attributes.size(); i++)
-		{
-			ret += attributes[i].ToStr();
-		}
-		return ret;
-	}
-
-	enum type{undefined, opener, closer};
-	QString TypeToStr()
-	{
-		QString ret = "error";
-		switch (type) {
-		case undefined: ret = "undefined"; break;
-		case opener: ret = "opener"; break;
-		case closer: ret = "closer"; break;
-		default: ret = "error";
-		}
-		return ret;
-	}
+	enum type { undefined, opener, closer, single };
+	QString TypeToStr();
 };
 
 struct HTML
 {
 	QString html;
-	std::vector<Teg> tegs;
-	void ParseTegs();
+	std::vector<std::unique_ptr<Tag>> tags;
 
-	QString TegsTextToStr()
-	{
-		QString ret;
-		for(auto &teg:tegs)
-		{
-			ret += teg.IndexesAndSrcTextToStr() + "\n";
-		}
-		return ret;
-	}
+	void ParseTags();
+	std::vector<Tag*> FindTags(QString name, std::vector<Attribute> attributes);
 
-	QString TegsDecodedToStr()
-	{
-		QString ret;
-		for(auto &teg:tegs)
-		{
-			ret += teg.DecodedToStr() + "\n";
-		}
-		return ret;
-	}
+	QString TagsInfo();
 
-	static std::vector<Block> Parse(const QString &html);
+	static QString& RemoveJungAndAddSpaces(QString &text, bool removeJung, bool addSpaces);
 };
 
 
