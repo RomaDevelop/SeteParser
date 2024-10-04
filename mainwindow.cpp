@@ -108,8 +108,9 @@ Page::Page(QString url_, QString html_, QVBoxLayout *layout, QPlainTextEdit *tex
 
     QObject::connect(saveHtml, &QPushButton::clicked, [this](){
         QFile file("d:/html.txt");
+		QTextStream stream(&file)
         file.open(QFile::WriteOnly);
-        file.write(html.toUtf8());
+        stream << html;
     });
 
     QObject::connect(showAds, &QPushButton::clicked, [this](){
